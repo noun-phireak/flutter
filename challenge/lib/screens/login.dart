@@ -1,6 +1,9 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:challenge/constant.dart';
 import 'package:challenge/models/api_response.dart';
 import 'package:challenge/services/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -15,14 +18,9 @@ class _LoginState extends State<Login> {
   TextEditingController textPhone = TextEditingController();
   TextEditingController textPassword = TextEditingController();
 
-  void _loginUser() async {
-    ApiResponse response = await login(textPhone.text, textPassword.text);
-    if (response.error == null) {
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('{$response.error}')));
-    }
-  }
+  String email = "";
+  String password = "";
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +29,19 @@ class _LoginState extends State<Login> {
       body: Form(
         key: formkey,
         child: ListView(
-          padding: EdgeInsets.all(32),
+          padding: const EdgeInsets.all(32),
           children: [
             TextFormField(
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.emailAddress,
                 controller: textPhone,
                 validator: (value) => value!.isEmpty ? 'Invalid Email' : null,
-                decoration: keyboardInput("Phone")),
-            SizedBox(
+                decoration: keyboardInput("Email"),
+                onChanged: (Value){
+                  setState(() {
+                    email = Value.toString();
+                  });
+                },),
+            const SizedBox(
               height: 15,
             ),
             TextFormField(
@@ -46,12 +49,18 @@ class _LoginState extends State<Login> {
                 obscureText: true,
                 validator: (value) =>
                     value!.isEmpty ? 'Required at least 6 chars' : null,
-                decoration: keyboardInput("Password")),
-            SizedBox(
+                decoration: keyboardInput("Password"),
+                onChanged: (pass){
+                  setState(() {
+                    password = pass.toString();
+                  });
+                },
+                ),
+            const SizedBox(
               height: 15,
             ),
             TextButton(
-              child: Text(
+              child: const Text(
                 'Login',
                 style: TextStyle(color: Colors.white),
               ),
@@ -59,11 +68,11 @@ class _LoginState extends State<Login> {
                 backgroundColor:
                     MaterialStateColor.resolveWith((states) => Colors.blue),
                 padding: MaterialStateProperty.resolveWith(
-                    (states) => EdgeInsets.symmetric(vertical: 10)),
+                    (states) => const EdgeInsets.symmetric(vertical: 10)),
               ),
               onPressed: () {
                 if (formkey.currentState!.validate()) {
-                  _loginUser();
+                 Login();
                 }
               },
             )
@@ -71,5 +80,9 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+  Future Login() async{
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email, password: password);
   }
 }

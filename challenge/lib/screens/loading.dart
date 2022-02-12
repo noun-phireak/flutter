@@ -1,4 +1,3 @@
-import 'dart:js';
 import 'package:challenge/constant.dart';
 import 'package:challenge/models/api_response.dart';
 import 'package:challenge/screens/home.dart';

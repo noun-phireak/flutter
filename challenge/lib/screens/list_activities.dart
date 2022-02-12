@@ -1,38 +1,46 @@
-import 'package:challenge/screens/student.dart';
+// ignore_for_file: must_be_immutable, non_constant_identifier_names
+import 'package:challenge/screens/activity.dart';
+import 'package:challenge/screens/notification.dart';
 import 'package:flutter/material.dart';
 
-class ListActivities extends StatelessWidget {
-  const ListActivities({Key? key}) : super(key: key);
+class ListActivities extends StatefulWidget {
+    String name;
+    String ImgURL;
+  ListActivities({Key? key, required this.name, required this.ImgURL}) : super(key: key);
 
   @override
+  State<ListActivities> createState() => _ListActivitiesState();
+}
+
+class _ListActivitiesState extends State<ListActivities> {
+  @override
   Widget build(BuildContext context) {
-    List<Student> students = [
-      Student(1, 'Ly Lay'),
-      Student(2, 'Noun Pheareak'),
-      Student(3, 'Ly Lay'),
-      Student(4, 'Noun Pheareak'),
-      Student(5, 'Ly Lay'),
-      Student(6, 'Noun Pheareak'),
-      Student(7, 'Ly Lay'),
-      Student(8, 'Noun Pheareak'),
-      Student(9, 'Ly Lay'),
-      Student(10, 'Noun Pheareak'),
-      Student(11, 'Ly Lay'),
-      Student(12, 'Noun Pheareak'),
-      Student(13, 'Ly Lay'),
-      Student(14, 'Noun Pheareak'),
-      Student(15, 'Ly Lay'),
-      Student(16, 'Noun Pheareak'),
-      Student(17, 'Ly Lay'),
-      Student(18, 'Noun Pheareak'),
-    ];
-    return GridView.count(
-        crossAxisCount: 2,
-        children: List.generate(students.length, (index) {
-          return Card(
-            elevation: 3.0,
-            child: Text(students[index].name),
-          );
-        }));
-  }
+   
+    return Padding(
+      padding: const EdgeInsets.all(3),
+      child: GestureDetector(
+        child: Card(
+          elevation: 5,
+          child:  Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 100,
+                width: 100,
+                child: Image(image: NetworkImage(widget.ImgURL))),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(widget.name, style: const TextStyle(fontWeight: FontWeight.bold , fontSize: 15),))
+            ],
+          ),
+        ),
+        onTap: (){
+        setState(() {
+           Navigator.push(context, MaterialPageRoute(builder: (context) => Activity(name: widget.name)));
+        });
+        },
+      ),
+    );
+}
 }
